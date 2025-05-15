@@ -65,7 +65,7 @@ class xboxConsole():
         if len(raw) == 2:
             key = raw[1].decode().strip()[4:].lstrip()
         else:
-            return 'BAD PACKET' # i had a problem with cpukey packets where they would be malformed could be a one time thing but i included this just in case
+            return 'BAD PACKET' # i had a problem with cpukey packets where they would be malformed could be a one time thing but i included this just in case (will add a retry thing later on)
         return key
 
 # Example usage
