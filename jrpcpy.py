@@ -1,6 +1,4 @@
 from socket import *
-import struct, uuid
-from time import sleep
 
 class xboxConsole():
     connected = False
