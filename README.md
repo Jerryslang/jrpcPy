@@ -5,7 +5,9 @@ Example Usage:
 ```
 from jrpcpy import *
 
-xbox = xboxConsole("192.168.0.58", debug=False)
+console_ip = '192.168.0.***' # change to your consoles local ip
+
+xbox = xboxConsole(console_ip, debug=False)
 xbox.connect()
 
 xbox.xNotify(xbox.GetCpuKey(), 1)
