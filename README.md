@@ -41,3 +41,7 @@ xbox.setMemory
 - sets a memory address
 - 2 arguments (address data)
 - both args are strings
+
+--------------------------
+## Debug Mode
+debug mode allows you to see plain recieved packets its usefull if your working with raw packets
