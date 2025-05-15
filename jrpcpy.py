@@ -1,4 +1,5 @@
 from socket import *
+from time import sleep
 
 class xboxConsole():
     connected = False
@@ -61,9 +62,16 @@ class xboxConsole():
         self.sendTextCommand(f'consolefeatures ver=2 type=12 params="A\\0\\A\\2\\2/{len(message)}\\{message.encode("cp1252").hex()}"\r\n')
 
     def GetCpuKey(self):
-        raw = self.sendTextCommand('consolefeatures ver=2 type=10 params="A\\0\\A\\0\\\"\r\n', recv_ammount=2)
-        if len(raw) == 2:
-            key = raw[1].decode().strip()[4:].lstrip()
-        else:
-            return 'BAD PACKET' # i had a problem with cpukey packets where they would be malformed could be a one time thing but i included this just in case (will add a retry thing later on)
-        return key
+        bpcounter, bplimit = 0,3
+        while True:
+            raw = self.sendTextCommand('consolefeatures ver=2 type=10 params="A\\0\\A\\0\\\"\r\n', recv_ammount=2)
+            if len(raw) == 2:
+                return raw[1].decode().strip()[4:].lstrip()
+            else:
+                if self.debug == True:
+                    print('bad packet... retrying')
+                elif bpcounter == bplimit:
+                    return 'Packets malformed'
+
+            bpcounter += 1
+            sleep(2)
