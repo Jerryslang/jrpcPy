@@ -67,9 +67,3 @@ class xboxConsole():
         else:
             return 'BAD PACKET' # i had a problem with cpukey packets where they would be malformed could be a one time thing but i included this just in case (will add a retry thing later on)
         return key
-
-# Example usage
-xbox = xboxConsole("192.168.0.58", debug=False)
-xbox.connect()
-
-xbox.xNotify(xbox.GetCpuKey(), 1)
