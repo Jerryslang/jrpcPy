@@ -15,7 +15,7 @@ xbox.xNotify(xbox.GetCpuKey(), 1)
 
 Avaliable Functions:
 ----------------------
-xbox.connect
+### xbox.connect
 - establishes a connection to the xbox
 - no arguments
  
