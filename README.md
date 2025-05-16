@@ -43,7 +43,7 @@ xbox.setMemory
 - both args are strings
 
 get_xbdm_name
-- retrives xbdm name from console
+- retrives xbdm name
 - no arguments
 
 --------------------------
