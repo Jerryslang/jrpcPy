@@ -1,5 +1,6 @@
 from socket import *
 from time import sleep
+import re
 
 class xboxConsole():
     connected = False
@@ -20,18 +21,19 @@ class xboxConsole():
         except:
             return 'invalid ip'
 
-    def sendTextCommand(self, command, recv_ammount=1):
+    def send_packet(self, command, recv_ammount=1, recv_bytes=1024):
         if self.connected:
             s = socket(AF_INET, SOCK_STREAM)
             s.settimeout(5.0)
             s.connect((self.ip, self.port))
             s.send(bytes(command, "cp1252"))
-
+            if recv_ammount == 0:
+                return
             data_chunks = []
             debug_packet_count, packet_count = 0,0
             try:
                 while recv_ammount != packet_count:
-                    chunk = s.recv(1024)
+                    chunk = s.recv(recv_bytes)
                     if self.debug == True:
                         print(f'{packet_count}: {chunk}')
 
@@ -53,25 +55,35 @@ class xboxConsole():
             return "Not connected to a console"
 
     def setMemory(self, address, data):
-        self.sendTextCommand("setmem addr=" + address + " data=" + data + "\r\n")
+        self.send_packet("setmem addr=" + address + " data=" + data + "\r\n")
 
-    def xNotify(self, message, logo):
+    def xNotify(self, message, logo=0):
         if logo > 76 or logo < 0:
             raise ValueError("Invalid xNotifyLogo")
 
-        self.sendTextCommand(f'consolefeatures ver=2 type=12 params="A\\0\\A\\2\\2/{len(message)}\\{message.encode("cp1252").hex()}"\r\n')
+        self.send_packet(f'consolefeatures ver=2 type=12 params="A\\0\\A\\2\\2/{len(message)}\\{message.encode("cp1252").hex()}"\r\n', recv_ammount=0)
 
     def GetCpuKey(self):
-        bpcounter, bplimit = 0,3
         while True:
-            raw = self.sendTextCommand('consolefeatures ver=2 type=10 params="A\\0\\A\\0\\\"\r\n', recv_ammount=2)
+            raw = self.send_packet('consolefeatures ver=2 type=10 params="A\\0\\A\\0\\\"\r\n', recv_ammount=2)
             if len(raw) == 2:
                 return raw[1].decode().strip()[4:].lstrip()
             else:
-                if self.debug == True:
-                    print('bad packet... retrying')
-                elif bpcounter == bplimit:
-                    return 'Packets malformed'
+                return raw[1]
 
             bpcounter += 1
             sleep(2)
+
+    def get_xbdm_name(self):
+        dbgname = self.send_packet("DBGNAME\r\n", recv_ammount=2)
+        if len(dbgname) == 1:
+            if isinstance(dbgname[0], bytes):
+                dbgname = dbgname[0].decode()
+            else:
+                dbgname = dbgname[0]
+
+            matches = list(re.finditer(r'\d+- ', dbgname))
+            secondend = matches[1].end()
+            return dbgname[secondend:].strip()
+        else:
+            return dbgname[1].decode('utf-8').strip().split()[-1]
