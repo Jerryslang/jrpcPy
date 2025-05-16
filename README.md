@@ -42,6 +42,10 @@ xbox.setMemory
 - 2 arguments (address data)
 - both args are strings
 
+get_xbdm_name
+- retrives xbdm name from console
+- no arguments
+
 --------------------------
 ## Debug Mode
 debug mode allows you to see plain recieved packets its usefull if your working with raw packets
