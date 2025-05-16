@@ -17,7 +17,6 @@ Avaliable Functions:
 ----------------------
 ### xbox.connect
 - establishes a connection to the xbox
-- no arguments
  
 ### xbox.xNotify
 - sends a notification to the xbox
@@ -28,7 +27,6 @@ Avaliable Functions:
 
 ### xbox.GetCpuKey
 - retrives the cpu key
-- no arguments
 
 ### xbox.sendTextCommand
 - sends a packet to the xbox
@@ -44,7 +42,6 @@ Avaliable Functions:
 
 ### get_xbdm_name
 - retrives xbdm name
-- no arguments
 
 --------------------------
 ## Debug Mode
